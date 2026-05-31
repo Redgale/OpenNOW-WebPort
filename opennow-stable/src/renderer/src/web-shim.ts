@@ -23,16 +23,60 @@ function makeUnsupportedNativeStatus(): NativeStreamerStatus {
   } as NativeStreamerStatus;
 }
 
+let _demoSession: any = null;
+
 const openNowStub: OpenNowApi = {
   async getAuthSession() {
-    return { session: null, refresh: defaultRefreshStatus } as AuthSessionResult;
+    return { session: _demoSession, refresh: defaultRefreshStatus } as any;
   },
-  async getLoginProviders() { return []; },
+  async getLoginProviders() {
+    // Provide a simple demo provider so UI can proceed in web builds
+    return [
+      {
+        idpId: "demo",
+        code: "DEMO",
+        displayName: "Demo Provider",
+        streamingServiceUrl: "https://demo.streaming.service",
+        priority: 100,
+      },
+    ];
+  },
   async getRegions() { return []; },
-  async login() { throw new Error("Not supported in web build"); },
-  async logout() { return; },
+  async login(request?: any) {
+    // Support a minimal demo login flow for the web build
+    const providerIdpId = request?.providerIdpId ?? "demo";
+    if (providerIdpId === "demo") {
+      const now = Math.floor(Date.now() / 1000);
+      _demoSession = {
+        provider: {
+          idpId: "demo",
+          code: "DEMO",
+          displayName: "Demo Provider",
+          streamingServiceUrl: "https://demo.streaming.service",
+          priority: 100,
+        },
+        tokens: {
+          accessToken: "demo-access-token",
+          refreshToken: "demo-refresh-token",
+          idToken: "demo-id-token",
+          expiresAt: now + 60 * 60,
+        },
+        user: {
+          userId: "demo-user",
+          displayName: "Demo User",
+          membershipTier: "free",
+        },
+      };
+      return { session: _demoSession, refresh: { ...defaultRefreshStatus, attempted: true, forced: false, outcome: "refreshed" } } as any;
+    }
+    throw new Error("Login provider not supported in web build");
+  },
+  async logout() { _demoSession = null; return; },
   async logoutAll() { return; },
-  async getSavedAccounts() { return []; },
+  async getSavedAccounts() {
+    if (!_demoSession) return [];
+    return [{ userId: _demoSession.user.userId, displayName: _demoSession.user.displayName, membershipTier: _demoSession.user.membershipTier, providerCode: _demoSession.provider.code }];
+  },
   async switchAccount() { throw new Error("Not supported in web build"); },
   async removeAccount() { return; },
   async fetchSubscription() { return { membershipTier: "free", allottedHours: 0, purchasedHours: 0, rolledOverHours: 0, usedHours: 0, remainingHours: 0, totalHours: 0, isUnlimited: false, entitledResolutions: [] }; },
