@@ -2,6 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { scan } from "react-scan";
 
+// Web shim for browser builds (provides `window.openNow`)
+import "./web-shim";
+
 import { initLogCapture } from "@shared/logger";
 import { App } from "./App";
 import { initializeLocale } from "./i18n";

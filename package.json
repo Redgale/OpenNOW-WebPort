@@ -1,7 +1,7 @@
 {
   "name": "opennow-workspace",
   "private": true,
-  "description": "OpenNOW Electron workspace",
+  "description": "OpenNOW web workspace (converted from Electron)",
   "scripts": {
     "dev": "npm --prefix opennow-stable run dev",
     "build": "npm --prefix opennow-stable run build",
@@ -9,8 +9,8 @@
     "native:build": "npm --prefix opennow-stable run native:build",
     "locales:check": "node opennow-stable/scripts/check-translations.mjs",
     "typecheck": "npm --prefix opennow-stable run typecheck",
-    "dist": "npm --prefix opennow-stable run dist",
-    "dist:signed": "npm --prefix opennow-stable run dist:signed",
+    "dist": "npm --prefix opennow-stable run build",
+    "dist:signed": "npm --prefix opennow-stable run build",
     "crowdin:upload": "crowdin upload sources",
     "crowdin:download": "crowdin download"
   }
