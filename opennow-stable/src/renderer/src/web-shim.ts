@@ -67,7 +67,8 @@ const openNowStub: OpenNowApi = {
           membershipTier: "free",
         },
       };
-      return { session: _demoSession, refresh: { ...defaultRefreshStatus, attempted: true, forced: false, outcome: "refreshed" } } as any;
+      // Return just the session (not wrapped in AuthSessionResult)
+      return _demoSession as any;
     }
     throw new Error("Login provider not supported in web build");
   },

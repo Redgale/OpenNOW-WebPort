@@ -9,7 +9,7 @@ type TranslationTree = { [key: string]: TranslationLeaf | TranslationTree };
 const FALLBACK_LOCALE = "en";
 const LOCALE_STORAGE_KEY = "opennow.locale";
 
-import fallbackTranslations from "../../../locales/en.json";
+import fallbackTranslationsImport from "../../../locales/en.json";
 
 const localeSources = import.meta.glob<string>("../../../locales/*.json", {
   query: "?raw",
@@ -17,7 +17,33 @@ const localeSources = import.meta.glob<string>("../../../locales/*.json", {
   eager: true,
 });
 
-const fallbackTree = fallbackTranslations as TranslationTree;
+// Ensure fallback translations are complete for web builds (covers critical UI paths)
+const essentialFallbacks: TranslationTree = {
+  app: {
+    name: "OpenNOW",
+    tagline: "Open-source cloud gaming client",
+    actions: { add: "Add", back: "Back", browse: "Browse", cancel: "Cancel", close: "Close", confirm: "Confirm", continue: "Continue", delete: "Delete", done: "Done", open: "Open", play: "Play", buy: "Buy", refresh: "Refresh", remove: "Remove", reset: "Reset", resume: "Resume", retry: "Retry", save: "Save", search: "Search", select: "Select", settings: "Settings", stop: "Stop", switch: "Switch" },
+    status: { checking: "Checking", connecting: "Connecting...", disabled: "Disabled", error: "Error", failed: "Failed", idle: "Idle", loading: "Loading...", ready: "Ready", saved: "Saved", testing: "Testing...", unknown: "Unknown", upToDate: "Up to date" },
+  },
+  auth: {
+    title: { signIn: "Sign in", restoringSession: "Restoring session" },
+    subtitle: { checkingSavedAccounts: "Checking saved accounts." },
+    provider: { label: "Provider", select: "Select provider", loading: "Loading..." },
+    actions: { signIn: "Sign In", connecting: "Connecting...", restoringSession: "Restoring Session..." },
+    status: { restoringSavedSession: "Restoring saved session...", sessionRestoredTokenRefreshed: "Session restored. Token refreshed.", tokenRefreshedLoadingAccount: "Token refreshed. Loading your account...", sessionRestored: "Session restored.", noSavedSessionFound: "No saved session found.", sessionRestoreFailed: "Session restore failed. Please sign in again." },
+    accounts: { activeAccount: "Active account", addAccount: "Add account", switchAccount: "Switch account", logOutAll: "Log out all accounts", staySignedIn: "Stay signed in" },
+  },
+  navigation: { home: "Store", library: "Library", settings: "Settings" },
+  home: { searchPlaceholder: "Search games...", filters: "Filters", count: { loading: "Loading...", shown: "{{shown}} shown", shownTotal: "{{shown}} shown · {{total}} total" }, empty: { loadingGames: "Loading games...", noGamesFound: "No games found", tryAdjustingSearch: "Try adjusting your search terms or filters" } },
+  library: { title: "My Library", searchPlaceholder: "Search your library...", gameCount: "{{count}} game", gameCount_plural: "{{count}} games", filter: "Filter", allStores: "All Stores", selectedStore: "Selected Store: {{store}}" },
+  streamLoading: { labels: { launchError: "Launch error", nowLoading: "Now loading" }, steps: { queue: "Queue", setup: "Setup", ready: "Ready" }, status: { gameLaunchFailed: "Game launch failed", queuePaused: "Session queue paused", positionInQueue: "Position #{{position}} in queue", waitingInQueue: "Waiting in queue...", settingUpRig: "Setting up your gaming rig...", startingStream: "Starting stream...", connectingToServer: "Connecting to server..." }, actions: { cancelLoading: "Cancel loading" } },
+  session: { active: "Active session", current: "Current", control: "Session control", elapsed: "Elapsed", endSession: "End session", exitStream: "Exit stream?", resume: "Resume", readyToLaunch: "Ready to launch", timeWarning: "Session time warning", thisGame: "this game" },
+  stream: { stats: { connecting: "Connecting...", network: "Network", decode: "Decode", input: "Input", render: "Render", stable: "Stable", roundTripLatency: "Round-trip network latency", packetLoss: "Packet loss percent" }, controls: { antiAfkEnabled: "Anti-AFK enabled", muteMicrophone: "Mute microphone", unmuteMicrophone: "Unmute microphone", enterFullscreen: "Enter fullscreen", exitFullscreen: "Exit fullscreen" }, shortcuts: { clickThenPress: "Click then press a key", examples: "Examples: F3, Ctrl+Shift+Q, Ctrl+Shift+K" } },
+  settings: { title: "Settings", saved: "Saved", searchPlaceholder: "Search settings...", noMatches: "No settings matched \"{{query}}\".", sections: { stream: "Stream", game: "Game", audio: "Audio", input: "Input", interface: "Interface", about: "About" }, region: { title: "Region", autoBest: "Auto (best)" }, video: { title: "Video", aspectRatio: "Aspect ratio", resolution: "Resolution", fps: "FPS", codec: "Codec", decoder: "Decoder", encoder: "Encoder", maxBitrate: "Max bitrate" }, game: { title: "Game", language: "Language", keyboardLayout: "Keyboard layout" }, audio: { title: "Audio", microphone: "Microphone", microphoneHint: "Enable voice chat while streaming", microphoneMode: "Microphone mode", disabled: "Disabled", pushToTalk: "Push-to-talk", voiceActivity: "Voice activity" }, input: { title: "Input", mouseAndKeyboard: "Mouse and Keyboard", clipboardPaste: "Clipboard paste", mouseSensitivity: "Mouse sensitivity", mouseAccelerator: "Mouse accelerator", shortcuts: "Shortcuts", toggleStats: "Toggle stats", stopStream: "Stop stream", toggleMicrophone: "Toggle microphone", screenshot: "Screenshot", recording: "Recording" }, interface: { appearance: "Appearance", appLanguage: "App language", accentColor: "Accent color", hideStreamOverlayButtons: "Hide stream overlay buttons", showStatsOnStreamLaunch: "Show stats on stream launch", controllerMode: "Controller mode", discordRichPresence: "Discord rich presence" }, about: { applicationUpdates: "Application updates", version: "Version {{version}}", checkForUpdates: "Check for updates", exportLogs: "Export logs", deleteCache: "Delete cache" } },
+  errors: { launchUnknown: "Game could not be launched. Please try again.", launchFailedTitle: "Launch failed", duplicateSessionTitle: "Duplicate session detected", loginFailed: "Login failed", switchAccountFailed: "Switch account failed" },
+};
+
+const fallbackTree = Object.assign({}, essentialFallbacks, fallbackTranslationsImport) as TranslationTree;
 const loadedLocales = new Map<string, TranslationTree>([[FALLBACK_LOCALE, fallbackTree]]);
 const listeners = new Set<() => void>();
 
