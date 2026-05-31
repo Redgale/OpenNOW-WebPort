@@ -1,0 +1,10 @@
+services:
+  - name: opennow-web
+    build:
+      context: .
+      dockerfile: opennow-stable/Dockerfile
+    ports:
+      - 8080:8080
+    env:
+      - name: NODE_ENV
+        value: production

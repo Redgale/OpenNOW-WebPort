@@ -19,118 +19,25 @@
     "preview": "vite preview",
     "dist": "npm run build",
     "dist:signed": "npm run build",
-    "native:check": "cargo check --manifest-path ../native/opennow-streamer/Cargo.toml",
-    "native:build": "node scripts/build-native-streamer.mjs",
     "lint": "oxlint src",
     "locales:check": "node scripts/check-translations.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.json",
     "test": "node scripts/run-tests.mjs"
   },
   "dependencies": {
-    "discord-rpc": "^4.0.1",
-    "electron-updater": "^6.8.3",
     "lucide-react": "^1.17.0",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "ws": "^8.21.0"
+    "react-dom": "^19.2.6"
   },
   "devDependencies": {
-    "@types/discord-rpc": "^4.0.10",
     "@types/node": "^22.19.17",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@types/ws": "^8.18.1",
     "@vitejs/plugin-react": "^5.2.0",
-    "cross-env": "^10.1.0",
-    "electron": "^41.1.1",
-    "electron-builder": "^26.8.1",
-    "electron-vite": "^5.0.0",
     "oxlint": "^1.67.0",
     "react-scan": "^0.5.3",
     "tsx": "^4.22.3",
     "typescript": "^6.0.3",
     "vite": "^7.3.1"
-  },
-  "build": {
-    "appId": "com.zortos.opennow.stable",
-    "productName": "OpenNOW",
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "OpenCloudGaming",
-        "repo": "OpenNOW"
-      }
-    ],
-    "icon": "../logo.png",
-    "npmRebuild": false,
-    "nodeGypRebuild": false,
-    "buildDependenciesFromSource": false,
-    "directories": {
-      "output": "dist-release"
-    },
-    "files": [
-      "dist/**",
-      "dist-electron/**",
-      "package.json"
-    ],
-    "extraResources": [
-      {
-        "from": "../native/opennow-streamer/bin",
-        "to": "native/opennow-streamer",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ],
-    "asar": true,
-    "win": {
-      "target": [
-        "nsis",
-        "portable"
-      ]
-    },
-    "nsis": {
-      "artifactName": "OpenNOW-v${version}-setup-${arch}.${ext}"
-    },
-    "portable": {
-      "artifactName": "OpenNOW-v${version}-portable-${arch}.${ext}"
-    },
-    "mac": {
-      "target": [
-        "dmg",
-        "zip"
-      ],
-      "category": "public.app-category.games",
-      "artifactName": "OpenNOW-v${version}-mac-${arch}.${ext}"
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ],
-      "category": "Game",
-      "maintainer": "zortos293 <zortos293@users.noreply.github.com>",
-      "artifactName": "OpenNOW-v${version}-linux-${arch}.${ext}"
-    },
-    "deb": {
-      "depends": [
-        "libgstreamer1.0-0",
-        "libgstreamer-plugins-base1.0-0",
-        "gstreamer1.0-tools",
-        "gstreamer1.0-libav",
-        "gstreamer1.0-plugins-base",
-        "gstreamer1.0-plugins-good",
-        "gstreamer1.0-plugins-bad",
-        "gstreamer1.0-plugins-ugly",
-        "gstreamer1.0-vaapi",
-        "gstreamer1.0-gl",
-        "gstreamer1.0-x",
-        "gstreamer1.0-alsa",
-        "libva2",
-        "libva-drm2",
-        "libvulkan1",
-        "mesa-vulkan-drivers"
-      ]
-    }
   }
 }
