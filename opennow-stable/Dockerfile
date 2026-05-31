@@ -5,9 +5,8 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM node:20-alpine AS runner
-WORKDIR /app
-RUN npm install -g serve@14.0.1
-COPY --from=builder /app/dist ./dist
+FROM nginx:stable-alpine AS runner
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 8080
-CMD ["serve", "-s", "dist", "-l", "8080"]
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
