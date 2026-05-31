@@ -1,6 +1,5 @@
 import { useMemo, useSyncExternalStore } from "react";
 
-import fallbackTranslations from "../../../../locales/en.json";
 
 type TranslationValue = string | number | boolean | null | undefined;
 type TranslationValues = Record<string, TranslationValue>;
@@ -10,7 +9,9 @@ type TranslationTree = { [key: string]: TranslationLeaf | TranslationTree };
 const FALLBACK_LOCALE = "en";
 const LOCALE_STORAGE_KEY = "opennow.locale";
 
-const localeSources = import.meta.glob<string>("../../../../locales/*.json", {
+import fallbackTranslations from "../../../locales/en.json";
+
+const localeSources = import.meta.glob<string>("../../../locales/*.json", {
   query: "?raw",
   import: "default",
   eager: true,
