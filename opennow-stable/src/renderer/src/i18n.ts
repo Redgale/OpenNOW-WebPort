@@ -9,9 +9,9 @@ type TranslationTree = { [key: string]: TranslationLeaf | TranslationTree };
 const FALLBACK_LOCALE = "en";
 const LOCALE_STORAGE_KEY = "opennow.locale";
 
-import fallbackTranslations from "../../../../locales/en.json";
+import fallbackTranslations from "../../../locales/en.json";
 
-const localeSources = import.meta.glob<string>("../../../../locales/*.json", {
+const localeSources = import.meta.glob<string>("../../../locales/*.json", {
   query: "?raw",
   import: "default",
   eager: true,
